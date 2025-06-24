@@ -8,11 +8,11 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
-OUTPUT_FORMAT = os.getenv("OUTPUT_FORMAT", "png").lower()
+DEFAULT_OUTPUT_FORMAT = os.getenv("DEFAULT_OUTPUT_FORMAT", "png").lower()
 
 
 # New function to generate a preview image from a GeoJSON file
-def preview_geojson(input_path, format=OUTPUT_FORMAT):
+def preview_geojson(input_path, format="png"):
     output_path = os.path.splitext(input_path)[0] + f".{format}"
 
     # Check if the file exists
@@ -43,7 +43,7 @@ def main():
         "-f",
         "--format",
         dest="output_format",
-        default=OUTPUT_FORMAT,
+        default=DEFAULT_OUTPUT_FORMAT,
         help="Output image format (e.g., png, jpg)",
     )
     parser.add_argument(
