@@ -16,7 +16,7 @@ gdf = gpd.read_file(geojson_path)
 
 # Plot and save as image
 fig, ax = plt.subplots(figsize=(8, 8))  # you can adjust the image size
-gdf.plot(ax=ax, color="blue", edgecolor="black")  # you can customize colors
+gdf.plot(ax=ax, color="gray", edgecolor="black")  # you can customize colors
 
 plt.axis("off")  # optional: turn off axis
 plt.savefig("preview.png", bbox_inches="tight", pad_inches=0, dpi=300)
