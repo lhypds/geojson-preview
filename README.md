@@ -14,7 +14,7 @@ Setup
 .env
 ----
 
-DEFAULT_OUTPUT_FORMAT=png
+`DEFAULT_OUTPUT_FORMAT=png`  
 Set the output format, support png, pdf.
 
 
