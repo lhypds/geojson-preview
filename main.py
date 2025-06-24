@@ -3,10 +3,18 @@ import sys
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import argparse
+from dotenv import load_dotenv
+
+
+# Load environment variables from .env file
+load_dotenv()
+OUTPUT_FORMAT = os.getenv("OUTPUT_FORMAT", "png").lower()
 
 
 # New function to generate a preview image from a GeoJSON file
-def preview_geojson(input_path, output_path):
+def preview_geojson(input_path, format=OUTPUT_FORMAT):
+    output_path = os.path.splitext(input_path)[0] + f".{format}"
+
     # Check if the file exists
     if not os.path.exists(input_path):
         print(f"Error: GeoJSON file '{input_path}' not found.")
@@ -18,18 +26,25 @@ def preview_geojson(input_path, output_path):
     fig, ax = plt.subplots(figsize=(8, 8))
     gdf.plot(ax=ax, color="lightgray", edgecolor="gray")
     plt.axis("off")
-    plt.savefig(output_path, bbox_inches="tight", pad_inches=0, dpi=300)
+    plt.savefig(output_path, format=format, bbox_inches="tight", pad_inches=0, dpi=300)
     plt.close()
-    print(f"Image saved as {output_path}")
+    print(f"Saved as {output_path}")
     try:
         os.startfile(output_path)
     except Exception as e:
-        print(f"Could not open image automatically: {e}")
+        print(f"Could not open output file automatically: {e}")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate preview PNG from a GeoJSON file"
+        description="Generate preview image from a GeoJSON file"
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        dest="output_format",
+        default=OUTPUT_FORMAT,
+        help="Output image format (e.g., png, jpg)",
     )
     parser.add_argument(
         "-i",
@@ -38,19 +53,12 @@ def main():
         default="sample.geojson",
         help="Path to the input GeoJSON file",
     )
-    parser.add_argument(
-        "-o",
-        "--output",
-        dest="output_path",
-        default="preview.png",
-        help="Path for the output PNG file",
-    )
     args = parser.parse_args()
 
     # Process GeoJSON
     print(f"Input GeoJSON file: {args.input_path}")
-    print(f"Output PNG file: {args.output_path}")
-    preview_geojson(args.input_path, args.output_path)
+    print(f"Output format: {args.output_format}")
+    preview_geojson(args.input_path, format=args.output_format)
 
 
 if __name__ == "__main__":
