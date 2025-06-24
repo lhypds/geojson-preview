@@ -27,5 +27,5 @@ Specify the input file:
 `python main.py -i input_file`
 
 Specify the output format:  
-`python main.py -f output_format`
+`python main.py -f output_format`  
 Support formats: png, pdf.
