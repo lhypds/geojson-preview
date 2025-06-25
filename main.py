@@ -24,7 +24,7 @@ def preview_geojson(input_path, format="png"):
     gdf = gpd.read_file(input_path)
     # Plot and save as image
     fig, ax = plt.subplots(figsize=(8, 8))
-    gdf.plot(ax=ax, color="lightgray", edgecolor="gray")
+    gdf.plot(ax=ax, color="lightgray", edgecolor="gray", alpha=0.5)
     plt.axis("off")
     plt.savefig(output_path, format=format, bbox_inches="tight", pad_inches=0, dpi=300)
     plt.close()
