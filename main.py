@@ -27,9 +27,26 @@ def preview_geojson(input_path, format="png"):
 
     # Plot each feature individually to apply per-feature styling
     for _, row in gdf.iterrows():
-        edgecolor = "black" if row.get("種類") == "図郭" else "gray"
-        linewidth = 2 if row.get("種類") == "図郭" else 1
-        facecolor = "none" if row.get("種類") == "図郭" else "lightgray"
+        is_contour = row.get("種類") == "図郭"
+        edgecolor = "black" if is_contour else "gray"
+        linewidth = 2 if is_contour else 1
+        facecolor = "none" if is_contour else "lightgray"
+
+        if not is_contour:
+            land_number = row.get("地番")
+            if land_number:
+                # Draw land number text on the center of the polygon
+                centroid = row.geometry.centroid
+                ax.text(
+                    centroid.x,
+                    centroid.y,
+                    str(land_number),
+                    fontsize=6,
+                    ha="center",
+                    va="center",
+                    color="black",
+                )
+
         gpd.GeoSeries([row.geometry]).plot(
             ax=ax,
             facecolor=facecolor,
