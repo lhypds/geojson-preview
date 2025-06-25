@@ -24,15 +24,23 @@ def preview_geojson(input_path, format="png"):
     gdf = gpd.read_file(input_path)
     # Plot and save as image
     fig, ax = plt.subplots(figsize=(8, 8))
-    gdf.plot(ax=ax, color="lightgray", edgecolor="gray", alpha=0.5)
+
+    # Plot each feature individually to apply per-feature styling
+    for _, row in gdf.iterrows():
+        edgecolor = "black" if row.get("種類") == "図郭" else "gray"
+        linewidth = 2 if row.get("種類") == "図郭" else 1
+        gpd.GeoSeries([row.geometry]).plot(
+            ax=ax,
+            facecolor="lightgray",
+            edgecolor=edgecolor,
+            linewidth=linewidth,
+            alpha=0.5,
+        )
+
     plt.axis("off")
     plt.savefig(output_path, format=format, bbox_inches="tight", pad_inches=0, dpi=300)
     plt.close()
     print(f"Saved as {output_path}")
-    try:
-        os.startfile(output_path)
-    except Exception as e:
-        print(f"Could not open output file automatically: {e}")
 
 
 def main():
