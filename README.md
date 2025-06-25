@@ -1,6 +1,6 @@
 
-GeoJSON Preview
-===============
+GeoJSON Previewer
+=================
 
 A simple Python script to preview GeoJSON files in PNG or PDF format.
 
