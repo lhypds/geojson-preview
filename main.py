@@ -29,9 +29,10 @@ def preview_geojson(input_path, format="png"):
     for _, row in gdf.iterrows():
         edgecolor = "black" if row.get("種類") == "図郭" else "gray"
         linewidth = 2 if row.get("種類") == "図郭" else 1
+        facecolor = "none" if row.get("種類") == "図郭" else "lightgray"
         gpd.GeoSeries([row.geometry]).plot(
             ax=ax,
-            facecolor="lightgray",
+            facecolor=facecolor,
             edgecolor=edgecolor,
             linewidth=linewidth,
             alpha=0.5,
