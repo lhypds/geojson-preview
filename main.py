@@ -2,6 +2,7 @@ import os
 import sys
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import argparse
 from dotenv import load_dotenv
 
@@ -9,6 +10,12 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 DEFAULT_OUTPUT_FORMAT = os.getenv("DEFAULT_OUTPUT_FORMAT", "png").lower()
+
+
+# Set Japanese font to avoid mojibake (uses Windows Meiryo)
+font_path = r"C:\Windows\Fonts\meiryo.ttc"
+jp_font = fm.FontProperties(fname=font_path)
+plt.rcParams["font.family"] = jp_font.get_name()
 
 
 # New function to generate a preview image from a GeoJSON file
@@ -21,7 +28,7 @@ def preview_geojson(input_path, format="png"):
         sys.exit(1)
 
     # Read the GeoJSON file
-    gdf = gpd.read_file(input_path)
+    gdf = gpd.read_file(input_path, encoding="utf-8")
     # Plot and save as image
     fig, ax = plt.subplots(figsize=(8, 8))
 
@@ -52,7 +59,7 @@ def preview_geojson(input_path, format="png"):
             facecolor=facecolor,
             edgecolor=edgecolor,
             linewidth=linewidth,
-            alpha=0.5,
+            alpha=0.8,
         )
 
     plt.axis("off")
