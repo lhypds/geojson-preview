@@ -38,6 +38,7 @@ def preview_geojson(input_path, format="png"):
         edgecolor = "black" if is_contour else "gray"
         linewidth = 2 if is_contour else 1
         facecolor = "none" if is_contour else "lightgray"
+        alpha = 1 if is_contour else 0.5
 
         if not is_contour:
             land_number = row.get("地番")
@@ -59,7 +60,7 @@ def preview_geojson(input_path, format="png"):
             facecolor=facecolor,
             edgecolor=edgecolor,
             linewidth=linewidth,
-            alpha=0.8,
+            alpha=alpha,
         )
 
     plt.axis("off")
