@@ -29,6 +29,10 @@ def preview_geojson(input_path, format="png"):
 
     # Read the GeoJSON file
     gdf = gpd.read_file(input_path, encoding="utf-8")
+
+    # Identify the "図郭" polygon
+    contour_polygon = gdf[gdf["種類"] == "図郭"].geometry.union_all()
+
     # Plot and save as image
     fig, ax = plt.subplots(figsize=(8, 8))
 
@@ -40,11 +44,16 @@ def preview_geojson(input_path, format="png"):
         facecolor = "none" if is_contour else "lightgray"
         alpha = 1 if is_contour else 0.5
 
+        geometry_to_plot = row.geometry
+        if not is_contour and contour_polygon:
+            # Clip the geometry to the "図郭" polygon
+            geometry_to_plot = row.geometry.intersection(contour_polygon)
+
         if not is_contour:
             land_number = row.get("地番")
-            if land_number:
-                # Draw land number text on the center of the polygon
-                centroid = row.geometry.centroid
+            if land_number and not geometry_to_plot.is_empty:
+                # Draw land number text on the center of the clipped polygon
+                centroid = geometry_to_plot.centroid
                 ax.text(
                     centroid.x,
                     centroid.y,
@@ -55,13 +64,14 @@ def preview_geojson(input_path, format="png"):
                     color="black",
                 )
 
-        gpd.GeoSeries([row.geometry]).plot(
-            ax=ax,
-            facecolor=facecolor,
-            edgecolor=edgecolor,
-            linewidth=linewidth,
-            alpha=alpha,
-        )
+        if not geometry_to_plot.is_empty:
+            gpd.GeoSeries([geometry_to_plot]).plot(
+                ax=ax,
+                facecolor=facecolor,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                alpha=alpha,
+            )
 
     plt.axis("off")
     plt.savefig(output_path, format=format, bbox_inches="tight", pad_inches=0, dpi=300)
