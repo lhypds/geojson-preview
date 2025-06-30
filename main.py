@@ -39,9 +39,27 @@ def preview_geojson(input_path, format="png"):
     # Plot each feature individually to apply per-feature styling
     for _, row in gdf.iterrows():
         is_contour = row.get("種類") == "図郭"
-        edgecolor = "black" if is_contour else "gray"
-        linewidth = 2 if is_contour else 1
-        facecolor = "none" if is_contour else "lightgray"
+        edgecolor = (
+            "red"
+            if row.geometry.type == "Point"
+            else (
+                "cornflowerblue"
+                if row.geometry.type in ["LineString", "MultiLineString"]
+                else ("black" if is_contour else "gray")
+            )
+        )
+        linewidth = (
+            2
+            if is_contour
+            else (
+                1 if row.geometry.type not in ["LineString", "MultiLineString"] else 1.5
+            )
+        )
+        facecolor = (
+            "none"
+            if row.geometry.type == "LineString"
+            else ("none" if is_contour else "lightgray")
+        )
         alpha = 1 if is_contour else 0.5
 
         geometry_to_plot = row.geometry
