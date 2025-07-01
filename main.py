@@ -41,10 +41,10 @@ def preview_geojson(input_path, format="png"):
         is_contour = row.get("種類") == "図郭"
         edgecolor = (
             "red"
-            if row.geometry.type == "Point"
+            if row.geometry.geom_type == "Point"
             else (
                 "cornflowerblue"
-                if row.geometry.type in ["LineString", "MultiLineString"]
+                if row.geometry.geom_type in ["LineString", "MultiLineString"]
                 else ("black" if is_contour else "gray")
             )
         )
@@ -52,12 +52,14 @@ def preview_geojson(input_path, format="png"):
             2
             if is_contour
             else (
-                1 if row.geometry.type not in ["LineString", "MultiLineString"] else 1.5
+                1
+                if row.geometry.geom_type not in ["LineString", "MultiLineString"]
+                else 1.5
             )
         )
         facecolor = (
             "none"
-            if row.geometry.type == "LineString"
+            if row.geometry.geom_type == "LineString"
             else ("none" if is_contour else "lightgray")
         )
         alpha = 1 if is_contour else 0.5
